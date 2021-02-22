@@ -1,0 +1,23 @@
+{
+  "name": "idbexport",
+  "version": "1.0.0",
+  "description": "Simple indexedDB exporter",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markomannux/idbexport.git"
+  },
+  "keywords": [
+    "idb",
+    "export"
+  ],
+  "author": "Marco Mannucci",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/markomannux/idbexport/issues"
+  },
+  "homepage": "https://github.com/markomannux/idbexport#readme"
+}
