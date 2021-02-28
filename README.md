@@ -1,5 +1,7 @@
 # IdbExport
 
+[![Actions Status](https://github.com/markomannux/memembed/workflows/Build%20and%20Test/badge.svg)](https://github.com/markomannux/idbexport/actions)
+
 Utility functions for exporting (and re-importing) a whole indexedDB database. It's inspired from [indexeddb-export-import](https://www.npmjs.com/package/indexeddb-export-import) but is realised in typescript and is Promise based.
 
 Example usage:
