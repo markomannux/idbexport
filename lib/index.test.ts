@@ -1,4 +1,4 @@
-import * as dbtest from './index'
+import * as idbExport from './index'
 import { openDB } from 'idb'
 
 const initSingleStoreDb = async (dbName: string) => {
@@ -71,7 +71,7 @@ describe('single store database export', () => {
 
     test('simple export', async () => {
         const db = await openDB('singleStoreDb')
-        expect(await dbtest.exportToJSONString(db)).toBe(JSON.stringify(expectedSingleStoreDatabaseExportedModel))
+        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedSingleStoreDatabaseExportedModel))
     })
 
 })
@@ -84,7 +84,7 @@ describe('multiple store database export', () => {
 
     test('simple export', async () => {
         const db = await openDB('multipleStoreDb')
-        expect(await dbtest.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
     })
 })
 
@@ -96,9 +96,9 @@ describe('database import', () => {
 
     test('simple import', async () => {
         const db = await openDB('emptyDb')
-        await dbtest.importJSONString(db, JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        await idbExport.importJSONString(db, JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
         
-        expect(await dbtest.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
     })
 })
 
@@ -110,7 +110,7 @@ describe('clear database', () => {
 
     test('simple import', async () => {
         const db = await openDB('dbToClear')
-        await dbtest.clearDatabase(db)
-        expect(await dbtest.exportToJSONString(db)).toBe(JSON.stringify(expectedEmptyDatabaseExportedModel))
+        await idbExport.clearDatabase(db)
+        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedEmptyDatabaseExportedModel))
     })
 })
