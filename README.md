@@ -4,6 +4,8 @@
 
 Utility functions for exporting (and re-importing) a whole indexedDB database. It's inspired from [indexeddb-export-import](https://www.npmjs.com/package/indexeddb-export-import) but is realised in typescript and is Promise based.
 
+As for now, Date type serialization and deserialization is supported.
+
 Example usage:
 
 ```
