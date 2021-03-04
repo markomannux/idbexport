@@ -11,7 +11,8 @@ export async function exportToJSONString(db: any): Promise<string> {
         const items = [] 
         while(true) {
             if(cursor) {
-               items.push({key: cursor.key, value: {...cursor.value}})
+               const value = serialize(cursor.value)
+               items.push({key: cursor.key, value: {...value}})
                cursor = await cursor?.continue()
             } else break
         } 
@@ -34,7 +35,7 @@ export async function importJSONString(db: any, jsonString: string): Promise<voi
         const items = importObject[storeName]
         
         items.map(async (item: any) => {
-            await transaction.objectStore(storeName).add(item.value, item.key )
+            await transaction.objectStore(storeName).add(deserialize(item.value), item.key )
         })
     }))        
 }
@@ -50,3 +51,40 @@ export async function clearDatabase(db: any): Promise<void[]> {
         await transaction.objectStore(storeName).clear()
     }))        
 }
+
+function serialize(item: any): any {
+
+    if(!item) return item;
+    if (item instanceof Date) return {"idbexport.date": item.toISOString()}
+    if (!isObject(item)) return item
+
+    const res: any = {}
+    for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+            res[key] = serialize(item[key])
+        }
+    } 
+    return res
+}
+
+function deserialize(item: any): any {
+
+    if(!item) return item;
+    if (!isObject(item)) return item
+
+    let res: any = {}
+    for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+            if (key === "idbexport.date") {
+                res = new Date(item[key])
+            } else {
+                res[key] = deserialize(item[key])
+            }
+        }
+    } 
+    return res
+}
+
+const isObject = (obj: any) => {
+    return Object.prototype.toString.call(obj) === '[object Object]';
+};

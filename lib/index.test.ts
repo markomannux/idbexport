@@ -8,7 +8,7 @@ const initSingleStoreDb = async (dbName: string) => {
         }
     })
 
-    await db1.add('testStore', {foo: 'bar'}, 1)
+    await db1.add('testStore', {foo: 'bar', when: new Date('2021-03-01T20:40:15.465Z')}, 1)
     await db1.add('testStore', {fizz: 'buzz'}, 2)
 
     db1.close()
@@ -16,7 +16,7 @@ const initSingleStoreDb = async (dbName: string) => {
 
 const expectedSingleStoreDatabaseExportedModel = {
     testStore: [
-        {key: 1, value: {foo: 'bar'}},
+        {key: 1, value: {foo: 'bar', when: {"idbexport.date": "2021-03-01T20:40:15.465Z"}}},
         {key: 2, value: {fizz: 'buzz'}}
     ]
 }
@@ -31,6 +31,7 @@ const initMultipleStoreDb = async (dbName: string) => {
 
     await db1.add('testStore1', {foo1: 'bar1'}, 1)
     await db1.add('testStore1', {fizz1: 'buzz1'}, 2)
+    await db1.add('testStore1', {foo: 'bar', when: new Date('2021-03-01T20:40:15.465Z')}, 3)
     await db1.add('testStore2', {foo2: 'bar2'}, "AAA")
     await db1.add('testStore2', {fizz2: 'buzz2'}, "BBB")
 
@@ -40,7 +41,8 @@ const initMultipleStoreDb = async (dbName: string) => {
 const expectedMultipleStoreDatabaseExportedModel = {
     testStore1: [
         {key: 1, value: {foo1: 'bar1'}},
-        {key: 2, value: {fizz1: 'buzz1'}}
+        {key: 2, value: {fizz1: 'buzz1'}},
+        {key: 3, value: {foo: 'bar', when: {"idbexport.date": "2021-03-01T20:40:15.465Z"}}}
     ],
     testStore2: [
         {key: "AAA", value: {foo2: 'bar2'}},
@@ -84,7 +86,8 @@ describe('multiple store database export', () => {
 
     test('simple export', async () => {
         const db = await openDB('multipleStoreDb')
-        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        const exp = await idbExport.exportToJSONString(db)
+        expect(JSON.parse(exp)).toEqual(expectedMultipleStoreDatabaseExportedModel)
     })
 })
 
@@ -97,8 +100,9 @@ describe('database import', () => {
     test('simple import', async () => {
         const db = await openDB('emptyDb')
         await idbExport.importJSONString(db, JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        const exp = await idbExport.exportToJSONString(db) 
         
-        expect(await idbExport.exportToJSONString(db)).toBe(JSON.stringify(expectedMultipleStoreDatabaseExportedModel))
+        expect(JSON.parse(exp)).toEqual(expectedMultipleStoreDatabaseExportedModel)
     })
 })
 
